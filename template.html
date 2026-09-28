@@ -47,15 +47,18 @@ header.poster .eyebrow { font: 600 12px/1 var(--f-body); letter-spacing: .12em; 
 header.poster h1 { font: 700 34px/1.02 var(--f-display); margin: 6px 0 4px; text-wrap: balance; letter-spacing: .01em; }
 header.poster p { margin: 0; font-size: 14px; max-width: 60ch; }
 
-.filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px 14px; padding-block: 16px; border-bottom: 1px solid var(--line); }
-.f { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.filters { display: grid; grid-template-columns: 1fr; gap: 16px; padding-block: 16px; border-bottom: 1px solid var(--line); }
+@media (min-width: 560px) { .filters { grid-template-columns: 1fr 1fr; gap: 16px 24px; } .filters .wide { grid-column: 1 / -1; } }
+.f { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.fh { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
 .f label, .f .lbl { font-size: 12px; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; font-weight: 600; }
-.f input[type=date], .f input[type=time], .f select { font: 500 15px var(--f-body); padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--fg); width: 100%; }
+.f input[type=date] { -webkit-appearance: none; appearance: none; min-height: 44px; font: 500 16px var(--f-body); padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--fg); width: 100%; }
 .f input[type=range] { width: 100%; accent-color: var(--accent); }
-.f output { font: 600 15px var(--f-mono); }
+.f output { font: 600 15px var(--f-mono); white-space: nowrap; }
 .seg { display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--card); }
-.seg button { flex: 1; font: 500 13px var(--f-body); padding: 8px 4px; border: 0; background: transparent; color: var(--fg); cursor: pointer; }
+.seg button { flex: 1; min-height: 44px; font: 500 14px var(--f-body); padding: 8px 4px; border: 0; background: transparent; color: var(--fg); cursor: pointer; }
 .seg button[aria-pressed=true] { background: var(--fg); color: var(--bg); }
+.seg button + button { border-left: 1px solid var(--line); }
 button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .summary { color: var(--muted); font-size: 13px; padding-block: 12px 4px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
@@ -82,7 +85,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .w-good { color: var(--good); background: var(--good-bg) }
 .w-ok { color: var(--ot); background: var(--ot-bg) }
 .w-long { color: var(--warn); background: var(--warn-bg) }
-.leg { grid-column: 1 / -1; display: grid; grid-template-columns: 4.2em auto 1fr; gap: 4px 10px; align-items: center; font-size: 13px; }
+.leg { grid-column: 1 / -1; display: grid; grid-template-columns: 4em 1fr auto; gap: 6px 10px; align-items: center; font-size: 13px; }
+.leg .by { grid-column: 2 / -1; color: var(--muted); font-size: 12.5px; margin-top: -4px; }
 .leg .t { font: 600 14px var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .leg .k { color: var(--muted); }
 .leg .chips { display: flex; gap: 4px; flex-wrap: wrap; min-width: 0; }
@@ -102,26 +106,27 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .now h2 { font: 700 20px/1.1 var(--f-display); margin: 0 0 4px; letter-spacing: .01em; }
 .nrow { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; padding: 10px 0; border-top: 1px solid var(--line); align-items: baseline; }
 .nrow:first-of-type { border-top: 0 }
-.nrow .nt { font: 600 22px/1 var(--f-mono); font-variant-numeric: tabular-nums; grid-row: span 2; }
+.nrow .nt { font: 600 22px/1 var(--f-mono); font-variant-numeric: tabular-nums; grid-row: span 4; }
 .nrow .nd { font-weight: 600; min-width: 0; }
 .nrow .ns { grid-column: 2; font-size: 13px; color: var(--muted); }
 .nrow .ns b { color: var(--fg); font-weight: 600; }
 .nempty { color: var(--muted); font-size: 14px; padding: 6px 0; }
 .live { margin: 8px 0 0; font-size: 12px; color: var(--muted); }
-.late { color: var(--warn); font-weight: 700; }
-.cancel { color: var(--pr); background: var(--pr-bg); font-weight: 700; padding: 1px 6px; border-radius: 5px; font-size: 12px; }
-.buy { justify-self: start; font: 600 13px/1 var(--f-body); color: var(--bg); background: var(--accent); padding: 6px 12px; border-radius: 6px; text-decoration: none; white-space: nowrap; }
-.nrow .buy { grid-column: 2; margin-top: 6px; }
+.late { color: var(--warn); font-weight: 700; white-space: nowrap; }
+.cancel { white-space: nowrap; color: var(--pr); background: var(--pr-bg); font-weight: 700; padding: 1px 6px; border-radius: 5px; font-size: 12px; }
+.buy { justify-self: end; font: 600 13px/1 var(--f-body); color: var(--bg); background: var(--accent); padding: 6px 12px; border-radius: 6px; text-decoration: none; white-space: nowrap; }
+.nrow .buy { grid-column: 2; justify-self: start; margin-top: 8px; }
 .fbox { margin-top: 14px; border-bottom: 1px solid var(--line); }
 .fbox > summary { cursor: pointer; padding: 10px 0; color: var(--accent); font-weight: 600; font-size: 15px; list-style: none; }
 .fbox > summary::-webkit-details-marker { display: none }
 .fbox > summary::after { content: " ▾"; }
 .fbox[open] > summary::after { content: " ▴"; }
 .fbox .filters { border-bottom: 0; padding-top: 4px; }
-.stepper { display: flex; align-items: stretch; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--card); }
-.stepper button { font: 600 18px/1 var(--f-body); min-width: 44px; padding: 8px 0; border: 0; background: transparent; color: var(--fg); cursor: pointer; }
-.stepper button.now-btn { font-size: 13px; min-width: 56px; border-left: 1px solid var(--line); }
-.stepper output { flex: 1; text-align: center; align-self: center; font: 600 16px var(--f-mono); font-variant-numeric: tabular-nums; }
+.stepper { display: grid; grid-template-columns: 52px 1fr 52px auto; min-height: 44px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--card); }
+.stepper button { font: 600 20px/1 var(--f-body); border: 0; background: transparent; color: var(--fg); cursor: pointer; touch-action: manipulation; }
+.stepper button:active { background: var(--line); }
+.stepper output { display: grid; place-items: center; font: 600 18px var(--f-mono); font-variant-numeric: tabular-nums; border-inline: 1px solid var(--line); }
+.stepper button.now-btn { font: 600 14px var(--f-body); padding-inline: 14px; border-left: 1px solid var(--line); color: var(--accent); }
 .last { color: var(--warn); font-weight: 600; }
 .sample { background: var(--warn-bg); color: var(--warn); padding: 8px 12px; border-radius: 8px; font-size: 13px; margin-top: 12px; font-weight: 500; }
 </style>
@@ -134,8 +139,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
   </header>
 
   <div class="tabs" role="tablist" aria-label="Stacja startowa">
-    <button type="button" role="tab" data-o="0" aria-selected="true">Zamek<small>przystanek Sucha Beskidzka Zamek</small></button>
-    <button type="button" role="tab" data-o="1" aria-selected="false">Stacja<small>Sucha Beskidzka</small></button>
+    <button type="button" role="tab" data-o="0" aria-selected="true">Zamek<small>przystanek</small></button>
+    <button type="button" role="tab" data-o="1" aria-selected="false">Stacja<small>główna</small></button>
   </div>
   <p class="tabnote" id="tabnote"></p>
 
@@ -151,9 +156,9 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
   <section class="filters" aria-label="Filtry">
     <div class="f"><label for="date">Dzień</label><input id="date" type="date"></div>
     <div class="f"><span class="lbl">Wyjazd od</span>
-      <div class="stepper"><button type="button" id="fromMinus" aria-label="30 minut wcześniej">−</button><output id="fromO" aria-live="polite"></output><button type="button" id="fromPlus" aria-label="30 minut później">+</button><button type="button" class="now-btn" id="fromNow">teraz</button></div>
+      <div class="stepper"><button type="button" id="fromMinus" aria-label="30 minut wcześniej">−</button><output id="fromO" aria-live="polite"></output><button type="button" id="fromPlus" aria-label="30 minut później">+</button><button type="button" class="now-btn" id="fromNow">Teraz</button></div>
       <input id="from" type="hidden"></div>
-    <div class="f"><span class="lbl">Kierunek</span>
+    <div class="f wide"><span class="lbl">Kierunek</span>
       <div class="seg" id="dir" role="group" aria-label="Kierunek">
         <button type="button" data-v="all" aria-pressed="true">Oba</button>
         <button type="button" data-v="S" aria-pressed="false">Zakopane</button>
@@ -161,10 +166,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
         <button type="button" data-v="W" aria-pressed="false" id="dirW">Żywiec</button>
       </div>
     </div>
-    <div class="f"><label for="minRide">Jazda w jedną stronę co najmniej</label><input id="minRide" type="range" min="10" max="120" step="5" value="40"><output id="minRideO"></output></div>
-    <div class="f"><label for="maxRide">Jazda w jedną stronę najwyżej</label><input id="maxRide" type="range" min="30" max="360" step="15" value="120"><output id="maxRideO"></output></div>
-    <div class="f"><label for="maxWait">Czekanie najwyżej</label><input id="maxWait" type="range" min="10" max="120" step="5" value="60"><output id="maxWaitO"></output></div>
-    <div class="f"><label for="minWait">Czekanie co najmniej</label><input id="minWait" type="range" min="1" max="15" step="1" value="3"><output id="minWaitO"></output></div>
+    <div class="f"><div class="fh"><label for="minRide">Jazda w jedną stronę, co najmniej</label><output id="minRideO"></output></div><input id="minRide" type="range" min="10" max="120" step="5" value="40"></div>
+    <div class="f"><div class="fh"><label for="maxRide">Jazda w jedną stronę, najwyżej</label><output id="maxRideO"></output></div><input id="maxRide" type="range" min="30" max="360" step="15" value="120"></div>
+    <div class="f"><div class="fh"><label for="maxWait">Czekanie, najwyżej</label><output id="maxWaitO"></output></div><input id="maxWait" type="range" min="10" max="120" step="5" value="60"></div>
+    <div class="f"><div class="fh"><label for="minWait">Czekanie, co najmniej</label><output id="minWaitO"></output></div><input id="minWait" type="range" min="1" max="15" step="1" value="3"></div>
   </section>
   </details>
 
@@ -179,7 +184,7 @@ const DATA = /*__DATA__*/null;
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, "0");
 const hm = m => { m = ((m % 1440) + 1440) % 1440; return pad(Math.floor(m / 60)) + ":" + pad(m % 60); };
-const dur = m => m < 60 ? m + " min" : Math.floor(m / 60) + " h" + (m % 60 ? " " + (m % 60) + " min" : "");
+const dur = m => (m < 60 ? m + " min" : Math.floor(m / 60) + " h" + (m % 60 ? " " + (m % 60) + " min" : "")).replace(/ /g, "\u00a0");
 const ST = DATA.stations, ORIGINS = DATA.origins;
 let O = ORIGINS[0];
 const TABNOTE = [
@@ -232,6 +237,7 @@ function carrier(t) {
   if (a.includes("małopolskie") || a.includes("malopolskie")) return ["c-km", "Koleje Małopolskie"];
   return ["c-ot", t.a || "Przewoźnik"];
 }
+function byLine(t) { return [carrier(t)[1], [t.c, t.n].filter(Boolean).join(" "), t.b ? "autobus zastępczy" : ""].filter(Boolean).join(" · "); }
 function chips(t) {
   const [cls, name] = carrier(t);
   const cat = [t.c, t.n].filter(Boolean).join(" ");
@@ -313,10 +319,11 @@ function liveOf(o) {
 function optHtml(o) {
   const l = liveOf(o);
   return `<div class="opt">
-    <div class="st">${esc(ST[o.st])}<small>${dur(o.ride)} jazdy w jedną stronę · cała wycieczka ${dur(o.total)}${o.last ? ` · <span class="last">ostatni powrót tego dnia</span>` : ""}${l.risky ? ` · <span class="last">przez opóźnienie powrót może uciec</span>` : ""}</small></div>
+    <div class="st">${esc(ST[o.st])}<small>${dur(o.ride)} w jedną stronę · ${dur(o.total)} razem${o.last ? ` · <span class="last">ostatni powrót tego dnia</span>` : ""}${l.risky ? ` · <span class="last">przez opóźnienie powrót może uciec</span>` : ""}</small></div>
     <div class="wait ${waitCls(l.wait)}">czekasz ${l.wait} min</div>
     <div class="leg"><span class="k">tam</span><span class="t">${hm(o.dep)}${tag(l.od)} → ${hm(o.arr)}${tag(l.oa)}</span>${buyHtml(o)}
-      <span class="k">powrót</span><span class="t">${hm(o.rdep)}${tag(l.rd)} → ${hm(o.rback)}${tag(l.ra)}</span><span class="chips">${chips(o.ret)}</span></div>
+      <span class="k">powrót</span><span class="t">${hm(o.rdep)}${tag(l.rd)} → ${hm(o.rback)}${tag(l.ra)}</span><span></span>
+      <span class="by">${esc(byLine(o.ret))}</span></div>
   </div>`;
 }
 function filters() {
@@ -329,8 +336,9 @@ function renderNow() {
   const rows = res.slice(0, 3).map(r => {
     const o = r.opts.reduce((a, b) => b.wait < a.wait ? b : a), l = liveOf(o);   // najkrótsze czekanie
     return `<div class="nrow"><div class="nt">${hm(r.dep)}</div>
-      <div class="nd">${when}do ${esc(ST[o.st])}${l.od.x ? tag(l.od) : l.od.d >= 2 ? ` <span class="late">odjazd +${l.od.d} min</span>` : ""}${o.last ? ` <span class="last">· ostatni powrót</span>` : ""}</div>
-      <div class="ns">jazda ${dur(o.ride)} · czekasz <b>${l.wait} min</b> · wracasz <b>${hm(o.rback)}</b>${tag(l.ra)} · ${esc(carrier(r.t)[1])}${l.risky ? ` · <span class="last">powrót może uciec</span>` : ""}</div>${buyUrl(o) ? buyHtml(o) : ""}</div>`;
+      <div class="nd">${when}do ${esc(ST[o.st])}${l.od.x ? tag(l.od) : l.od.d >= 2 ? ` <span class="late">+${l.od.d}\u00a0min</span>` : ""}${o.last ? ` <span class="last">· ostatni powrót</span>` : ""}</div>
+      <div class="ns">jazda ${dur(o.ride)} · czekasz <b>${l.wait}\u00a0min</b></div>
+      <div class="ns">powrót <b>${hm(o.rback)}</b>${tag(l.ra)} · ${esc(carrier(r.t)[1])}${l.risky ? ` · <span class="last">może uciec</span>` : ""}</div>${buyUrl(o) ? buyHtml(o) : ""}</div>`;
   });
   $("nowList").innerHTML = rows.length ? rows.join("") : `<div class="nempty">Brak przejażdżek dziś ani jutro w tych ustawieniach.</div>`;
   const t = LIVE && LIVE.ts ? new Date(LIVE.ts) : null;
