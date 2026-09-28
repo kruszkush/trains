@@ -86,6 +86,7 @@ def main():
     ap.add_argument("--days", type=int, default=21)
     ap.add_argument("--out", default=str(HERE / "index.html"))
     ap.add_argument("--sample", help="napis ostrzegający, że dane są przykładowe")
+    ap.add_argument("--ids-out", help="zapisz listę trip_id (dla live.py)")
     ap.add_argument("--standalone", action="store_true",
                     help="pełny dokument HTML dla GitHub Pages (manifest, tryb offline, ostrzeżenie o starych danych)")
     args = ap.parse_args()
@@ -165,9 +166,10 @@ def main():
             dep = to_min(r["departure_time"]) if r["departure_time"] else arr
             # flagi: 1 = nie można wsiąść, 2 = nie można wysiąść
             fl = (1 if r.get("pickup_type") == "1" else 0) | (2 if r.get("drop_off_type") == "1" else 0)
-            seq.append([sidx(r["stop_id"]), arr, dep, fl])
+            seq.append([sidx(r["stop_id"]), arr, dep, fl, int(r["stop_sequence"])])
         i = len(out_trips)
         out_trips.append({
+            "i": tid,
             "c": route.get("route_short_name") or route.get("route_long_name", ""),
             "l": route.get("route_long_name", ""),
             "n": trip.get("trip_short_name", ""),
@@ -195,6 +197,8 @@ def main():
         html = (HERE / "static" / "head.html").read_text(encoding="utf-8") + html \
             + (HERE / "static" / "tail.html").read_text(encoding="utf-8")
     Path(args.out).write_text(html, encoding="utf-8")
+    if args.ids_out:
+        Path(args.ids_out).write_text("\n".join(t["i"] for t in out_trips) + "\n", encoding="utf-8")
     print(f"{len(out_trips)} kursów, {len(station_names)} stacji, {len(days)} dni -> {args.out}",
           file=sys.stderr)
 

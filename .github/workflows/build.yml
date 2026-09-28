@@ -26,7 +26,7 @@ jobs:
       - name: Zbuduj stronę z aktualnego rozkładu
         run: |
           mkdir -p site
-          python3 build.py --standalone --out site/index.html
+          python3 build.py --standalone --out site/index.html --ids-out site/trip_ids.txt
           cp static/sw.js static/manifest.webmanifest static/icon* site/
           touch site/.nojekyll
       - name: Opublikuj na GitHub Pages
@@ -39,4 +39,7 @@ jobs:
       - name: Nie pozwól GitHubowi wyłączyć harmonogramu po 60 dniach
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/build.yml/enable"
+        run: |
+          for w in build.yml live.yml; do
+            gh api -X PUT "repos/${{ github.repository }}/actions/workflows/$w/enable"
+          done

@@ -5,6 +5,7 @@ Strona na telefon z przejażdżkami pociągiem tam i z powrotem z Suchej Beskidz
 - Rozkład: otwarte dane PKP PLK, feed GTFS „Polish Trains” z [mkuran.pl](https://mkuran.pl/gtfs/).
 - Odświeżanie: GitHub Actions codziennie ok. 4:17 buduje `index.html` (`build.py` + `template.html`) i publikuje go na gałęzi `gh-pages`.
 - Jeśli odświeżanie się nie uda, strona zostaje z poprzednim rozkładem, pokazuje ostrzeżenie, a GitHub wysyła maila o nieudanym zadaniu.
+- Opóźnienia: GitHub Actions co ok. 10 min (5:00–24:00) wycina z feedu mkuran.pl kursy ze strony i zapisuje `live.json` na gałęzi `live`; strona pokazuje je tylko, gdy mają mniej niż 25 min.
 - Działa offline i można ją dodać do ekranu głównego telefonu.
 
 Lokalnie: `python3 build.py --standalone --out site/index.html`.

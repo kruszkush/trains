@@ -98,6 +98,28 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .tabs button[aria-selected=true] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
 .tabs small { display: block; font-weight: 400; font-size: 12px; opacity: .75; }
 .tabnote { margin: 8px 0 0; font-size: 13px; color: var(--muted); }
+.now { margin-top: 14px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.now h2 { font: 700 20px/1.1 var(--f-display); margin: 0 0 4px; letter-spacing: .01em; }
+.nrow { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; padding: 10px 0; border-top: 1px solid var(--line); align-items: baseline; }
+.nrow:first-of-type { border-top: 0 }
+.nrow .nt { font: 600 22px/1 var(--f-mono); font-variant-numeric: tabular-nums; grid-row: span 2; }
+.nrow .nd { font-weight: 600; min-width: 0; }
+.nrow .ns { grid-column: 2; font-size: 13px; color: var(--muted); }
+.nrow .ns b { color: var(--fg); font-weight: 600; }
+.nempty { color: var(--muted); font-size: 14px; padding: 6px 0; }
+.live { margin: 8px 0 0; font-size: 12px; color: var(--muted); }
+.late { color: var(--warn); font-weight: 700; }
+.cancel { color: var(--pr); background: var(--pr-bg); font-weight: 700; padding: 1px 6px; border-radius: 5px; font-size: 12px; }
+.fbox { margin-top: 14px; border-bottom: 1px solid var(--line); }
+.fbox > summary { cursor: pointer; padding: 10px 0; color: var(--accent); font-weight: 600; font-size: 15px; list-style: none; }
+.fbox > summary::-webkit-details-marker { display: none }
+.fbox > summary::after { content: " ▾"; }
+.fbox[open] > summary::after { content: " ▴"; }
+.fbox .filters { border-bottom: 0; padding-top: 4px; }
+.stepper { display: flex; align-items: stretch; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--card); }
+.stepper button { font: 600 18px/1 var(--f-body); min-width: 44px; padding: 8px 0; border: 0; background: transparent; color: var(--fg); cursor: pointer; }
+.stepper button.now-btn { font-size: 13px; min-width: 56px; border-left: 1px solid var(--line); }
+.stepper output { flex: 1; text-align: center; align-self: center; font: 600 16px var(--f-mono); font-variant-numeric: tabular-nums; }
 .last { color: var(--warn); font-weight: 600; }
 .sample { background: var(--warn-bg); color: var(--warn); padding: 8px 12px; border-radius: 8px; font-size: 13px; margin-top: 12px; font-weight: 500; }
 </style>
@@ -117,9 +139,18 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 
   <div id="sample" class="sample" hidden></div>
 
+  <section class="now" aria-label="Najbliższe przejażdżki">
+    <h2>Najbliższe przejażdżki</h2>
+    <div id="nowList"></div>
+    <p class="live" id="live"></p>
+  </section>
+
+  <details class="fbox" id="fbox"><summary>Plan na inny dzień i godzinę, filtry</summary>
   <section class="filters" aria-label="Filtry">
     <div class="f"><label for="date">Dzień</label><input id="date" type="date"></div>
-    <div class="f"><label for="from">Wyjazd od</label><input id="from" type="time" step="300"></div>
+    <div class="f"><span class="lbl">Wyjazd od</span>
+      <div class="stepper"><button type="button" id="fromMinus" aria-label="30 minut wcześniej">−</button><output id="fromO" aria-live="polite"></output><button type="button" id="fromPlus" aria-label="30 minut później">+</button><button type="button" class="now-btn" id="fromNow">teraz</button></div>
+      <input id="from" type="hidden"></div>
     <div class="f"><span class="lbl">Kierunek</span>
       <div class="seg" id="dir" role="group" aria-label="Kierunek">
         <button type="button" data-v="all" aria-pressed="true">Oba</button>
@@ -133,11 +164,12 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
     <div class="f"><label for="maxWait">Czekanie najwyżej</label><input id="maxWait" type="range" min="10" max="120" step="5" value="60"><output id="maxWaitO"></output></div>
     <div class="f"><label for="minWait">Czekanie co najmniej</label><input id="minWait" type="range" min="1" max="15" step="1" value="3"><output id="minWaitO"></output></div>
   </section>
+  </details>
 
   <div class="summary"><span id="count"></span><span id="gen"></span></div>
   <div class="list" id="list"></div>
 
-  <p class="note">Czekanie <b>do 25 min</b> jest oznaczone na zielono, powyżej 45 min na pomarańczowo. Rozkład pochodzi z otwartych danych PKP PLK (feed GTFS „Polish Trains” z mkuran.pl) i nie uwzględnia bieżących opóźnień ani zmian. Przed wyjazdem sprawdź pociąg w portalu pasażera.</p>
+  <p class="note">Czekanie <b>do 25 min</b> jest oznaczone na zielono, powyżej 45 min na pomarańczowo. Rozkład pochodzi z otwartych danych PKP PLK (feed GTFS „Polish Trains” z mkuran.pl) Opóźnienia i odwołania pochodzą z tego samego źródła, odświeżane co ok. 10 min, i pokazujemy je tylko, gdy są świeże. Przed wyjazdem sprawdź pociąg w portalu pasażera.</p>
 </div>
 
 <script>
@@ -152,6 +184,32 @@ const TABNOTE = [
   "Tu stają głównie pociągi PKP Intercity, a w weekendy Luxtorpeda Kolei Małopolskich. Regionalne Polregio stają na stacji Sucha Beskidzka (druga zakładka).",
   "Stacja Sucha Beskidzka jest ok. 1,7 km w linii prostej od przystanku Zamek, pieszo około 20–25 min. Tu stają pociągi Polregio."
 ];
+
+// Opóźnienia: live.json z gałęzi "live" (GitHub Actions co ok. 10 min wycina je z feedu mkuran.pl)
+const LIVE_URL = "https://raw.githubusercontent.com/kruszkush/trains/live/live.json";
+const LIVE_MAX_AGE = 25;   // min; starszych danych nie pokazujemy jako „na żywo”
+let LIVE = null;
+function isoDay(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+function shiftDay(dateStr, n) { const d = new Date(dateStr + "T12:00:00"); d.setDate(d.getDate() + n); return isoDay(d); }
+function liveFresh() { return LIVE && LIVE.ts && (Date.now() - new Date(LIVE.ts)) / 6e4 <= LIVE_MAX_AGE; }
+// leg = {t, off, i, dateStr}; kind 1 = przyjazd, 2 = odjazd -> {d: opóźnienie w min lub null, x: odwołany}
+function lv(leg, kind) {
+  if (!liveFresh()) return { d: null, x: false };
+  const u = LIVE.u[leg.t.i + "|" + shiftDay(leg.dateStr, leg.off ? -1 : 0)];
+  if (!u) return { d: null, x: false };
+  const st = leg.t.s[leg.i], r = u.s && u.s[st[4]];
+  const x = !!u.c || !!(r && r[2]);
+  const v = r ? (kind === 1 ? (r[0] ?? r[1]) : (r[1] ?? r[0])) : null;
+  return { d: v == null ? null : v - st[kind], x };
+}
+function tag(l) { return l.x ? ` <span class="cancel">odwołany</span>` : l.d >= 2 ? ` <span class="late">+${l.d}</span>` : ""; }
+async function loadLive() {
+  try {
+    const r = await fetch(LIVE_URL + "?t=" + Math.floor(Date.now() / 12e4), { cache: "no-store" });
+    if (r.ok) LIVE = await r.json();
+  } catch (e) {}
+  render();
+}
 
 function carrier(t) {
   const a = (t.a || "").toLowerCase(), c = (t.c || "").toUpperCase();
@@ -198,7 +256,7 @@ function compute(dateStr, fromMin, dir, minRide, maxRide, maxWait, minWait) {
       const [st, , dep, fl] = t.s[k];
       if (fl & 1) continue;                               // tam trzeba móc wsiąść
       if (!back.has(st)) back.set(st, []);
-      back.get(st).push({ t, dep: dep + off, back: t.s[oi][1] + off });
+      back.get(st).push({ t, dep: dep + off, back: t.s[oi][1] + off, off, k, oi });
     }
   }
   // ostatni powrót danego dnia z każdej stacji
@@ -223,7 +281,8 @@ function compute(dateStr, fromMin, dir, minRide, maxRide, maxWait, minWait) {
       if (!cands.length) continue;
       cands.sort((a, b) => a.back - b.back);
       const b = cands[0];                                 // najszybszy powrót z tej stacji
-      opts.push({ st, dep: dep0, arr, ride, wait: b.dep - arr, ret: b.t, rdep: b.dep, rback: b.back, total: b.back - dep0, last: b.dep === lastDep.get(st) });
+      opts.push({ st, dep: dep0, arr, ride, wait: b.dep - arr, ret: b.t, rdep: b.dep, rback: b.back, total: b.back - dep0, last: b.dep === lastDep.get(st),
+        L: { od: { t, off, i: oi, dateStr }, oa: { t, off, i: k, dateStr }, rd: { t: b.t, off: b.off, i: b.k, dateStr }, ra: { t: b.t, off: b.off, i: b.oi, dateStr } } });
     }
     if (opts.length) res.push({ t, dep: dep0, d, opts });
   }
@@ -232,18 +291,45 @@ function compute(dateStr, fromMin, dir, minRide, maxRide, maxWait, minWait) {
 }
 
 function waitCls(w) { return w <= 25 ? "w-good" : w <= 45 ? "w-ok" : "w-long"; }
+function liveOf(o) {
+  const od = lv(o.L.od, 2), oa = lv(o.L.oa, 1), rd = lv(o.L.rd, 2), ra = lv(o.L.ra, 1);
+  const wait = o.wait + (rd.d || 0) - (oa.d || 0);
+  return { od, oa, rd, ra, wait, risky: wait < 3 && (oa.d || rd.d) };
+}
 function optHtml(o) {
+  const l = liveOf(o);
   return `<div class="opt">
-    <div class="st">${esc(ST[o.st])}<small>${dur(o.ride)} jazdy w jedną stronę · cała wycieczka ${dur(o.total)}${o.last ? ` · <span class="last">ostatni powrót tego dnia</span>` : ""}</small></div>
-    <div class="wait ${waitCls(o.wait)}">czekasz ${o.wait} min</div>
-    <div class="leg"><span class="k">tam</span><span class="t">${hm(o.dep)} → ${hm(o.arr)}</span><span></span>
-      <span class="k">powrót</span><span class="t">${hm(o.rdep)} → ${hm(o.rback)}</span><span class="chips">${chips(o.ret)}</span></div>
+    <div class="st">${esc(ST[o.st])}<small>${dur(o.ride)} jazdy w jedną stronę · cała wycieczka ${dur(o.total)}${o.last ? ` · <span class="last">ostatni powrót tego dnia</span>` : ""}${l.risky ? ` · <span class="last">przez opóźnienie powrót może uciec</span>` : ""}</small></div>
+    <div class="wait ${waitCls(l.wait)}">czekasz ${l.wait} min</div>
+    <div class="leg"><span class="k">tam</span><span class="t">${hm(o.dep)}${tag(l.od)} → ${hm(o.arr)}${tag(l.oa)}</span><span></span>
+      <span class="k">powrót</span><span class="t">${hm(o.rdep)}${tag(l.rd)} → ${hm(o.rback)}${tag(l.ra)}</span><span class="chips">${chips(o.ret)}</span></div>
   </div>`;
+}
+function filters() {
+  return { dir: document.querySelector("#dir [aria-pressed=true]").dataset.v, minRide: +$("minRide").value, maxRide: +$("maxRide").value, maxWait: +$("maxWait").value, minWait: +$("minWait").value };
+}
+function renderNow() {
+  const now = new Date(), today = isoDay(now), f = filters();
+  let res = compute(today, now.getHours() * 60 + now.getMinutes(), f.dir, f.minRide, f.maxRide, f.maxWait, f.minWait), when = "";
+  if (!res.length) { res = compute(shiftDay(today, 1), 0, f.dir, f.minRide, f.maxRide, f.maxWait, f.minWait); when = "jutro "; }
+  const rows = res.slice(0, 3).map(r => {
+    const o = r.opts.reduce((a, b) => b.wait < a.wait ? b : a), l = liveOf(o);   // najkrótsze czekanie
+    return `<div class="nrow"><div class="nt">${hm(r.dep)}</div>
+      <div class="nd">${when}do ${esc(ST[o.st])}${l.od.x ? tag(l.od) : l.od.d >= 2 ? ` <span class="late">odjazd +${l.od.d} min</span>` : ""}${o.last ? ` <span class="last">· ostatni powrót</span>` : ""}</div>
+      <div class="ns">jazda ${dur(o.ride)} · czekasz <b>${l.wait} min</b> · wracasz <b>${hm(o.rback)}</b>${tag(l.ra)} · ${esc(carrier(r.t)[1])}${l.risky ? ` · <span class="last">powrót może uciec</span>` : ""}</div></div>`;
+  });
+  $("nowList").innerHTML = rows.length ? rows.join("") : `<div class="nempty">Brak przejażdżek dziś ani jutro w tych ustawieniach.</div>`;
+  const t = LIVE && LIVE.ts ? new Date(LIVE.ts) : null;
+  $("live").textContent = liveFresh() ? `Opóźnienia na żywo z ${pad(t.getHours())}:${pad(t.getMinutes())}.`
+    : t ? `Brak świeżych danych o opóźnieniach (ostatnie z ${pad(t.getHours())}:${pad(t.getMinutes())}${isoDay(t) === today ? "" : ", " + isoDay(t).split("-").reverse().join(".")}). Godziny są z rozkładu.`
+    : "Godziny z rozkładu, bez danych o opóźnieniach.";
 }
 function render() {
   const dateStr = $("date").value, [h, m] = ($("from").value || "00:00").split(":").map(Number);
   const dir = document.querySelector("#dir [aria-pressed=true]").dataset.v;
   const minRide = +$("minRide").value, maxRide = +$("maxRide").value, maxWait = +$("maxWait").value, minWait = +$("minWait").value;
+  $("fromO").textContent = $("from").value;
+  renderNow();
   $("minRideO").textContent = dur(minRide); $("maxRideO").textContent = dur(maxRide); $("maxWaitO").textContent = dur(maxWait); $("minWaitO").textContent = minWait + " min";
   const res = compute(dateStr, h * 60 + m, dir, minRide, maxRide, maxWait, minWait);
   $("count").textContent = res.length ? `${res.length} odjazdów z przejażdżką` : "";
@@ -289,9 +375,20 @@ function render() {
   const save = () => { try { localStorage.setItem("przejazdzki", JSON.stringify({ minRide: $("minRide").value, maxRide: $("maxRide").value, maxWait: $("maxWait").value, minWait: $("minWait").value, dir: document.querySelector("#dir [aria-pressed=true]").dataset.v, tab: ORIGINS.indexOf(O) })); } catch (e) {} };
   document.querySelectorAll("input").forEach(el => el.addEventListener("input", () => { render(); save(); }));
   tabs.forEach(b => b.addEventListener("click", () => { setTab(+b.dataset.o); render(); save(); }));
+  const stepFrom = n => {
+    const [hh, mm] = $("from").value.split(":").map(Number), cur = hh * 60 + mm;
+    const v = Math.min(Math.max(n > 0 ? (Math.floor(cur / 30) + 1) * 30 : (Math.ceil(cur / 30) - 1) * 30, 0), 1410);
+    $("from").value = pad(Math.floor(v / 60)) + ":" + pad(v % 60); render();
+  };
+  $("fromMinus").addEventListener("click", () => stepFrom(-30));
+  $("fromPlus").addEventListener("click", () => stepFrom(30));
+  $("fromNow").addEventListener("click", () => { const n = new Date(); $("date").value = isoDay(n); $("from").value = pad(n.getHours()) + ":" + pad(Math.floor(n.getMinutes() / 5) * 5); render(); });
   document.querySelectorAll("#dir button").forEach(b => b.addEventListener("click", () => {
     document.querySelectorAll("#dir button").forEach(x => x.setAttribute("aria-pressed", x === b)); render(); save();
   }));
   render();
+  loadLive();
+  setInterval(loadLive, 2 * 6e4);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) loadLive(); });
 })();
 </script>

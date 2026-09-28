@@ -1,0 +1,33 @@
+name: Opóźnienia na żywo
+
+on:
+  schedule:
+    - cron: "*/10 3-21 * * *"   # co 10 min, ok. 5:00–23:59 czasu polskiego (GitHub bywa spóźniony)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: live
+  cancel-in-progress: true
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lista kursów ze strony
+        run: git fetch --depth 1 origin gh-pages && git show origin/gh-pages:trip_ids.txt > trip_ids.txt
+      - name: Wytnij opóźnienia z feedu mkuran.pl
+        run: mkdir -p out && python3 live.py trip_ids.txt out/live.json
+      - name: Opublikuj live.json na gałęzi live
+        if: hashFiles('out/live.json') != ''
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          publish_branch: live
+          force_orphan: true
+          commit_message: "Opóźnienia"
