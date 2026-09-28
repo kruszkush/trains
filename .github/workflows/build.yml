@@ -1,0 +1,42 @@
+name: Odśwież rozkład
+
+on:
+  schedule:
+    - cron: "17 2 * * *"   # codziennie ok. 4:17 czasu polskiego
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Zbuduj stronę z aktualnego rozkładu
+        run: |
+          mkdir -p site
+          python3 build.py --standalone --out site/index.html
+          cp static/sw.js static/manifest.webmanifest static/icon* site/
+          touch site/.nojekyll
+      - name: Opublikuj na GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          force_orphan: true   # gałąź gh-pages ma zawsze jeden commit, repo nie puchnie
+          commit_message: "Rozkład z ${{ github.run_started_at }}"
+      - name: Nie pozwól GitHubowi wyłączyć harmonogramu po 60 dniach
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/build.yml/enable"

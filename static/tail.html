@@ -1,0 +1,18 @@
+<script>
+/* Ostrzeżenie, gdy codzienne odświeżanie przestało działać, i tryb offline. */
+(function () {
+  const p = n => String(n).padStart(2, "0");
+  const d = new Date(), iso = x => x.getFullYear() + "-" + p(x.getMonth() + 1) + "-" + p(x.getDate());
+  const days = Object.keys(DATA.days), last = days[days.length - 1];
+  const soon = new Date(d); soon.setDate(soon.getDate() + 3);
+  const gen = new Date(DATA.generated.replace(" ", "T"));
+  const ageDays = (d - gen) / 864e5;
+  let msg = "";
+  if (iso(d) > last) msg = "Rozkład się skończył (" + last.split("-").reverse().join(".") + "). Automatyczne odświeżanie nie działa, godziny mogą być nieaktualne.";
+  else if (iso(soon) > last || ageDays > 3) msg = "Rozkład nie odświeżał się od " + Math.floor(ageDays) + " dni. Godziny mogą być nieaktualne, sprawdź pociąg w portalu pasażera.";
+  if (msg) { const el = document.getElementById("sample"); el.hidden = false; el.textContent = msg; }
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+})();
+</script>
+</body>
+</html>

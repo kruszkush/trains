@@ -1,0 +1,297 @@
+<title>Przejażdżki z Suchej</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: jedna kolumna jak żółty plakat „Odjazdy” — filtr na górze, pod nim karty odjazdów z listą stacji nawrotu */
+:root {
+  --bg: #f7f6f1;
+  --card: #ffffff;
+  --fg: #1d2127;
+  --muted: #5f6570;
+  --line: #e3e1d8;
+  --poster: #f5c518;       /* żółty rozkładu jazdy */
+  --poster-ink: #1d2127;
+  --accent: #1f4e8c;
+  --good: #1f7a4d;
+  --good-bg: #e3f3ea;
+  --warn: #8a5a00;
+  --warn-bg: #fbefd5;
+  --ic: #0b3a70; --ic-bg: #e2ebf7;
+  --pr: #b3141c; --pr-bg: #fbe4e4;
+  --km: #00745f; --km-bg: #dcf2ec;
+  --ot: #4b4f58; --ot-bg: #eceae3;
+  --f-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15171b; --card: #1e2126; --fg: #eceae4; --muted: #a0a4ad; --line: #2e3238;
+  --poster: #e8b90f; --poster-ink: #15171b; --accent: #8db4ec;
+  --good: #7bd3a3; --good-bg: #1c3528; --warn: #f0c46a; --warn-bg: #3a2f17;
+  --ic: #a9c6f0; --ic-bg: #1d2d44; --pr: #f29a9d; --pr-bg: #3d1f21;
+  --km: #7fd8c3; --km-bg: #173a33; --ot: #c9ccd3; --ot-bg: #2c2f35;
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #15171b; --card: #1e2126; --fg: #eceae4; --muted: #a0a4ad; --line: #2e3238;
+  --poster: #e8b90f; --poster-ink: #15171b; --accent: #8db4ec;
+  --good: #7bd3a3; --good-bg: #1c3528; --warn: #f0c46a; --warn-bg: #3a2f17;
+  --ic: #a9c6f0; --ic-bg: #1d2d44; --pr: #f29a9d; --pr-bg: #3d1f21;
+  --km: #7fd8c3; --km-bg: #173a33; --ot: #c9ccd3; --ot-bg: #2c2f35;
+  color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--fg); font: 15px/1.45 var(--f-body); }
+.wrap { max-width: 720px; margin: 0 auto; padding-inline: 16px; padding-block: 0 48px; }
+header.poster { background: var(--poster); color: var(--poster-ink); margin-inline: -16px; padding: 18px 16px 14px; }
+header.poster .eyebrow { font: 600 12px/1 var(--f-body); letter-spacing: .12em; text-transform: uppercase; }
+header.poster h1 { font: 700 34px/1.02 var(--f-display); margin: 6px 0 4px; text-wrap: balance; letter-spacing: .01em; }
+header.poster p { margin: 0; font-size: 14px; max-width: 60ch; }
+
+.filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px 14px; padding-block: 16px; border-bottom: 1px solid var(--line); }
+.f { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.f label, .f .lbl { font-size: 12px; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; font-weight: 600; }
+.f input[type=date], .f input[type=time], .f select { font: 500 15px var(--f-body); padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--fg); width: 100%; }
+.f input[type=range] { width: 100%; accent-color: var(--accent); }
+.f output { font: 600 15px var(--f-mono); }
+.seg { display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--card); }
+.seg button { flex: 1; font: 500 13px var(--f-body); padding: 8px 4px; border: 0; background: transparent; color: var(--fg); cursor: pointer; }
+.seg button[aria-pressed=true] { background: var(--fg); color: var(--bg); }
+button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.summary { color: var(--muted); font-size: 13px; padding-block: 12px 4px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.list { display: flex; flex-direction: column; gap: 14px; padding-top: 8px; }
+
+.dep { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.dep-head { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; padding: 12px 14px; align-items: center; border-bottom: 1px solid var(--line); }
+.dep-time { font: 600 28px/1 var(--f-mono); font-variant-numeric: tabular-nums; grid-row: span 2; }
+.dep-dir { font: 700 20px/1.1 var(--f-display); letter-spacing: .01em; min-width: 0; }
+.dep-meta { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+
+.chip { display: inline-flex; align-items: center; gap: 4px; font: 600 12px/1 var(--f-body); padding: 4px 7px; border-radius: 5px; white-space: nowrap; }
+.c-ic { color: var(--ic); background: var(--ic-bg) }
+.c-pr { color: var(--pr); background: var(--pr-bg) }
+.c-km { color: var(--km); background: var(--km-bg) }
+.c-ot { color: var(--ot); background: var(--ot-bg) }
+
+.opts { display: flex; flex-direction: column; }
+.opt { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; padding: 11px 14px; border-top: 1px solid var(--line); }
+.opt:first-child { border-top: 0 }
+.opt .st { font-weight: 600; min-width: 0; }
+.opt .st small { display: block; font-weight: 400; color: var(--muted); font-size: 13px; }
+.wait { justify-self: end; align-self: start; font: 600 13px var(--f-mono); padding: 4px 8px; border-radius: 6px; white-space: nowrap; }
+.w-good { color: var(--good); background: var(--good-bg) }
+.w-ok { color: var(--ot); background: var(--ot-bg) }
+.w-long { color: var(--warn); background: var(--warn-bg) }
+.leg { grid-column: 1 / -1; display: grid; grid-template-columns: 4.2em auto 1fr; gap: 4px 10px; align-items: center; font-size: 13px; }
+.leg .t { font: 600 14px var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.leg .k { color: var(--muted); }
+.leg .chips { display: flex; gap: 4px; flex-wrap: wrap; min-width: 0; }
+.leg .chip { white-space: normal; line-height: 1.2; }
+.more { border-top: 1px solid var(--line); }
+.more summary { cursor: pointer; padding: 10px 14px; color: var(--accent); font-weight: 500; font-size: 14px; list-style: none; }
+.more summary::-webkit-details-marker { display: none }
+.empty { padding: 28px 16px; text-align: center; color: var(--muted); background: var(--card); border: 1px dashed var(--line); border-radius: 12px; }
+.note { margin-top: 18px; font-size: 12.5px; color: var(--muted); }
+.note b { color: var(--fg); font-weight: 600; }
+.tabs { display: flex; gap: 6px; margin-top: 14px; }
+.tabs button { flex: 1; font: 600 14px/1.2 var(--f-body); padding: 10px 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--fg); cursor: pointer; }
+.tabs button[aria-selected=true] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.tabs small { display: block; font-weight: 400; font-size: 12px; opacity: .75; }
+.tabnote { margin: 8px 0 0; font-size: 13px; color: var(--muted); }
+.last { color: var(--warn); font-weight: 600; }
+.sample { background: var(--warn-bg); color: var(--warn); padding: 8px 12px; border-radius: 8px; font-size: 13px; margin-top: 12px; font-weight: 500; }
+</style>
+
+<div class="wrap">
+  <header class="poster">
+    <div class="eyebrow">Odjazdy · tam i z powrotem</div>
+    <h1>Przejażdżki z Suchej Beskidzkiej</h1>
+    <p>Jedziesz, wysiadasz, czekasz chwilę na peronie i wracasz tym samym torem.</p>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Stacja startowa">
+    <button type="button" role="tab" data-o="0" aria-selected="true">Zamek<small>przystanek Sucha Beskidzka Zamek</small></button>
+    <button type="button" role="tab" data-o="1" aria-selected="false">Stacja<small>Sucha Beskidzka</small></button>
+  </div>
+  <p class="tabnote" id="tabnote"></p>
+
+  <div id="sample" class="sample" hidden></div>
+
+  <section class="filters" aria-label="Filtry">
+    <div class="f"><label for="date">Dzień</label><input id="date" type="date"></div>
+    <div class="f"><label for="from">Wyjazd od</label><input id="from" type="time" step="300"></div>
+    <div class="f"><span class="lbl">Kierunek</span>
+      <div class="seg" id="dir" role="group" aria-label="Kierunek">
+        <button type="button" data-v="all" aria-pressed="true">Oba</button>
+        <button type="button" data-v="S" aria-pressed="false">Zakopane</button>
+        <button type="button" data-v="N" aria-pressed="false">Kraków</button>
+        <button type="button" data-v="W" aria-pressed="false" id="dirW">Żywiec</button>
+      </div>
+    </div>
+    <div class="f"><label for="minRide">Jazda w jedną stronę co najmniej</label><input id="minRide" type="range" min="10" max="120" step="5" value="40"><output id="minRideO"></output></div>
+    <div class="f"><label for="maxRide">Jazda w jedną stronę najwyżej</label><input id="maxRide" type="range" min="30" max="360" step="15" value="120"><output id="maxRideO"></output></div>
+    <div class="f"><label for="maxWait">Czekanie najwyżej</label><input id="maxWait" type="range" min="10" max="120" step="5" value="60"><output id="maxWaitO"></output></div>
+    <div class="f"><label for="minWait">Czekanie co najmniej</label><input id="minWait" type="range" min="1" max="15" step="1" value="3"><output id="minWaitO"></output></div>
+  </section>
+
+  <div class="summary"><span id="count"></span><span id="gen"></span></div>
+  <div class="list" id="list"></div>
+
+  <p class="note">Czekanie <b>do 25 min</b> jest oznaczone na zielono, powyżej 45 min na pomarańczowo. Rozkład pochodzi z otwartych danych PKP PLK (feed GTFS „Polish Trains” z mkuran.pl) i nie uwzględnia bieżących opóźnień ani zmian. Przed wyjazdem sprawdź pociąg w portalu pasażera.</p>
+</div>
+
+<script>
+const DATA = /*__DATA__*/null;
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, "0");
+const hm = m => { m = ((m % 1440) + 1440) % 1440; return pad(Math.floor(m / 60)) + ":" + pad(m % 60); };
+const dur = m => m < 60 ? m + " min" : Math.floor(m / 60) + " h" + (m % 60 ? " " + (m % 60) + " min" : "");
+const ST = DATA.stations, ORIGINS = DATA.origins;
+let O = ORIGINS[0];
+const TABNOTE = [
+  "Tu stają głównie pociągi PKP Intercity, a w weekendy Luxtorpeda Kolei Małopolskich. Regionalne Polregio stają na stacji Sucha Beskidzka (druga zakładka).",
+  "Stacja Sucha Beskidzka jest ok. 1,7 km w linii prostej od przystanku Zamek, pieszo około 20–25 min. Tu stają pociągi Polregio."
+];
+
+function carrier(t) {
+  const a = (t.a || "").toLowerCase(), c = (t.c || "").toUpperCase();
+  if (a.includes("intercity") || ["IC", "EIC", "EIP", "TLK", "EC", "EN"].includes(c)) return ["c-ic", "PKP Intercity"];
+  if (a.includes("polregio")) return ["c-pr", "Polregio"];
+  if (a.includes("małopolskie") || a.includes("malopolskie")) return ["c-km", "Koleje Małopolskie"];
+  return ["c-ot", t.a || "Przewoźnik"];
+}
+function chips(t) {
+  const [cls, name] = carrier(t);
+  const cat = [t.c, t.n].filter(Boolean).join(" ");
+  return `<span class="chip ${cls}">${name}</span>` + (cat ? `<span class="chip c-ot">${esc(cat)}</span>` : "")
+    + (t.b ? `<span class="chip c-ot">autobus zastępczy</span>` : "");
+}
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+// Kierunek: Zamek leży między Kalwarią a Makowem, więc kurs jadący dalej przez Maków / Zakopane to "S", reszta "N".
+// Ze stacji Sucha Beskidzka jedzie się jeszcze na zachód, w stronę Żywca ("W").
+const SOUTH = /zakopane|nowy targ|chabówka|jordanów|maków|poronin|rabka|szaflary/i;
+const WEST = /żywiec|stryszawa|jeleśnia|hucisko|świnna|twardorzeczka/i;
+function direction(t, i) {
+  const s = ST[t.s[i + 1][0]] + " " + ST[t.s[t.s.length - 1][0]];
+  return SOUTH.test(s) ? "S" : WEST.test(ST[t.s[i + 1][0]]) ? "W" : "N";
+}
+
+function tripsOn(dateStr) {
+  // kursy z danego dnia + kursy z poprzedniego, które kursują po północy (czas >= 24:00)
+  const out = [];
+  for (const i of DATA.days[dateStr] || []) out.push([DATA.trips[i], 0]);
+  const d = new Date(dateStr + "T12:00:00"); d.setDate(d.getDate() - 1);
+  const prev = d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  for (const i of DATA.days[prev] || []) { const t = DATA.trips[i]; if (t.s[t.s.length - 1][1] >= 1440) out.push([t, -1440]); }
+  return out;
+}
+
+function compute(dateStr, fromMin, dir, minRide, maxRide, maxWait, minWait) {
+  const trips = tripsOn(dateStr);
+  // indeks kursów powrotnych: stacja -> [{t, dep, back}]
+  const back = new Map();
+  for (const [t, off] of trips) {
+    const oi = t.s.findIndex(x => x[0] === O);
+    if (oi < 1 || (t.s[oi][3] & 2)) continue;           // na Zamku trzeba móc wysiąść
+    for (let k = 0; k < oi; k++) {
+      const [st, , dep, fl] = t.s[k];
+      if (fl & 1) continue;                               // tam trzeba móc wsiąść
+      if (!back.has(st)) back.set(st, []);
+      back.get(st).push({ t, dep: dep + off, back: t.s[oi][1] + off });
+    }
+  }
+  // ostatni powrót danego dnia z każdej stacji
+  const lastDep = new Map();
+  for (const [st, arr] of back) lastDep.set(st, Math.max(...arr.map(b => b.dep)));
+  const res = [];
+  for (const [t, off] of trips) {
+    const oi = t.s.findIndex(x => x[0] === O);
+    if (oi < 0 || oi === t.s.length - 1 || (t.s[oi][3] & 1)) continue;
+    const dep0 = t.s[oi][2] + off;
+    if (dep0 < fromMin || dep0 >= 1440) continue;
+    const d = direction(t, oi);
+    if (dir !== "all" && d !== dir) continue;
+    const opts = [];
+    for (let k = oi + 1; k < t.s.length; k++) {
+      const [st, arr0, , fl] = t.s[k];
+      if (fl & 2) continue;
+      const arr = arr0 + off, ride = arr - dep0;
+      if (ride < minRide) continue;
+      if (ride > maxRide) break;
+      const cands = (back.get(st) || []).filter(b => b.t !== t && b.dep - arr >= minWait && b.dep - arr <= maxWait);
+      if (!cands.length) continue;
+      cands.sort((a, b) => a.back - b.back);
+      const b = cands[0];                                 // najszybszy powrót z tej stacji
+      opts.push({ st, dep: dep0, arr, ride, wait: b.dep - arr, ret: b.t, rdep: b.dep, rback: b.back, total: b.back - dep0, last: b.dep === lastDep.get(st) });
+    }
+    if (opts.length) res.push({ t, dep: dep0, d, opts });
+  }
+  res.sort((a, b) => a.dep - b.dep);
+  return res;
+}
+
+function waitCls(w) { return w <= 25 ? "w-good" : w <= 45 ? "w-ok" : "w-long"; }
+function optHtml(o) {
+  return `<div class="opt">
+    <div class="st">${esc(ST[o.st])}<small>${dur(o.ride)} jazdy w jedną stronę · cała wycieczka ${dur(o.total)}${o.last ? ` · <span class="last">ostatni powrót tego dnia</span>` : ""}</small></div>
+    <div class="wait ${waitCls(o.wait)}">czekasz ${o.wait} min</div>
+    <div class="leg"><span class="k">tam</span><span class="t">${hm(o.dep)} → ${hm(o.arr)}</span><span></span>
+      <span class="k">powrót</span><span class="t">${hm(o.rdep)} → ${hm(o.rback)}</span><span class="chips">${chips(o.ret)}</span></div>
+  </div>`;
+}
+function render() {
+  const dateStr = $("date").value, [h, m] = ($("from").value || "00:00").split(":").map(Number);
+  const dir = document.querySelector("#dir [aria-pressed=true]").dataset.v;
+  const minRide = +$("minRide").value, maxRide = +$("maxRide").value, maxWait = +$("maxWait").value, minWait = +$("minWait").value;
+  $("minRideO").textContent = dur(minRide); $("maxRideO").textContent = dur(maxRide); $("maxWaitO").textContent = dur(maxWait); $("minWaitO").textContent = minWait + " min";
+  const res = compute(dateStr, h * 60 + m, dir, minRide, maxRide, maxWait, minWait);
+  $("count").textContent = res.length ? `${res.length} odjazdów z przejażdżką` : "";
+  if (!res.length) {
+    $("list").innerHTML = `<div class="empty">Brak przejażdżek w tych ustawieniach.<br>Spróbuj innego dnia, wcześniejszej godziny albo dłuższego czekania.</div>`;
+    return;
+  }
+  $("list").innerHTML = res.map(r => {
+    const last = ST[r.t.s[r.t.s.length - 1][0]];
+    const shown = r.opts.slice(0, 3), rest = r.opts.slice(3);
+    return `<article class="dep">
+      <div class="dep-head"><div class="dep-time">${hm(r.dep)}</div>
+        <div class="dep-dir">w stronę: ${esc(r.t.h || last)}</div>
+        <div class="dep-meta">${chips(r.t)}</div></div>
+      <div class="opts">${shown.map(optHtml).join("")}</div>
+      ${rest.length ? `<details class="more"><summary>Dalsze stacje (${rest.length})</summary><div class="opts">${rest.map(optHtml).join("")}</div></details>` : ""}
+    </article>`;
+  }).join("");
+}
+
+(function init() {
+  const now = new Date();
+  const today = now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate());
+  const days = Object.keys(DATA.days);
+  $("date").min = days[0]; $("date").max = days[days.length - 1];
+  $("date").value = DATA.days[today] ? today : days[1] || days[0];
+  $("from").value = $("date").value === today ? pad(now.getHours()) + ":" + pad(Math.floor(now.getMinutes() / 5) * 5) : "05:00";
+  $("gen").textContent = "rozkład z " + DATA.generated + ", do " + days[days.length - 1].split("-").reverse().join(".");
+  if (DATA.sample) { $("sample").hidden = false; $("sample").textContent = DATA.sample; }
+  let saved = {}; try { saved = JSON.parse(localStorage.getItem("przejazdzki") || "{}"); } catch (e) {}
+  for (const k of ["minRide", "maxRide", "maxWait", "minWait"]) if (saved[k]) $(k).value = saved[k];
+  const tabs = document.querySelectorAll(".tabs button");
+  const setTab = i => {
+    O = ORIGINS[i];
+    tabs.forEach(b => b.setAttribute("aria-selected", +b.dataset.o === i));
+    $("tabnote").textContent = TABNOTE[i] || "";
+    $("dirW").hidden = i === 0;
+    if (i === 0 && document.querySelector("#dir [aria-pressed=true]").dataset.v === "W")
+      document.querySelectorAll("#dir button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === "all"));
+  };
+  setTab(saved.tab ? +saved.tab : 0);
+  if (saved.dir) document.querySelectorAll("#dir button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === saved.dir));
+  const save = () => { try { localStorage.setItem("przejazdzki", JSON.stringify({ minRide: $("minRide").value, maxRide: $("maxRide").value, maxWait: $("maxWait").value, minWait: $("minWait").value, dir: document.querySelector("#dir [aria-pressed=true]").dataset.v, tab: ORIGINS.indexOf(O) })); } catch (e) {} };
+  document.querySelectorAll("input").forEach(el => el.addEventListener("input", () => { render(); save(); }));
+  tabs.forEach(b => b.addEventListener("click", () => { setTab(+b.dataset.o); render(); save(); }));
+  document.querySelectorAll("#dir button").forEach(b => b.addEventListener("click", () => {
+    document.querySelectorAll("#dir button").forEach(x => x.setAttribute("aria-pressed", x === b)); render(); save();
+  }));
+  render();
+})();
+</script>
