@@ -86,6 +86,8 @@ def main():
     ap.add_argument("--days", type=int, default=21)
     ap.add_argument("--out", default=str(HERE / "index.html"))
     ap.add_argument("--sample", help="napis ostrzegający, że dane są przykładowe")
+    ap.add_argument("--codes", help="station_codes.json z kodami stacji dla linków do Bilkomu")
+    ap.add_argument("--codes-debug", help="zapisz dopasowane kody stacji do sprawdzenia")
     ap.add_argument("--ids-out", help="zapisz listę trip_id (dla live.py)")
     ap.add_argument("--standalone", action="store_true",
                     help="pełny dokument HTML dla GitHub Pages (manifest, tryb offline, ostrzeżenie o starych danych)")
@@ -181,7 +183,31 @@ def main():
         for d in dates:
             days.setdefault(f"{d[:4]}-{d[4:6]}-{d[6:]}", []).append(i)
 
+    bk = [None] * len(station_names)
+    if args.codes and Path(args.codes).exists():
+        from math import cos, radians, hypot
+        codes = json.loads(Path(args.codes).read_text(encoding="utf-8"))
+        dbg = []
+        for k, i in station_idx.items():
+            lat, lon = float(stops[k]["stop_lat"]), float(stops[k]["stop_lon"])
+            name = station_names[i].casefold()
+            best = None
+            for c in codes:
+                d = hypot((c["lat"] - lat) * 111.2, (c["lon"] - lon) * 111.2 * cos(radians(lat)))
+                if d > 1.5:
+                    continue
+                score = (c["n"].casefold() != name, d)   # najpierw zgodna nazwa, potem odległość
+                if best is None or score < best[0]:
+                    best = (score, c)
+            if best:
+                bk[i] = best[1]["c"]
+            dbg.append(f'{station_names[i]}\t{bk[i] or "-"}\t{best[1]["n"] + " " + best[1]["src"] + " %.2f km" % best[0][1] if best else ""}')
+        if args.codes_debug:
+            Path(args.codes_debug).write_text("\n".join(sorted(dbg)) + "\n", encoding="utf-8")
+        print(f"kody Bilkomu dla {sum(1 for x in bk if x)}/{len(bk)} stacji", file=sys.stderr)
+
     payload = {
+        "bk": bk,
         "origins": origin_idx,
         "generated": datetime.now(tz).strftime("%Y-%m-%d %H:%M"),
         "stations": station_names,

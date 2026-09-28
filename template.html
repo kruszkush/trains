@@ -110,6 +110,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-v
 .live { margin: 8px 0 0; font-size: 12px; color: var(--muted); }
 .late { color: var(--warn); font-weight: 700; }
 .cancel { color: var(--pr); background: var(--pr-bg); font-weight: 700; padding: 1px 6px; border-radius: 5px; font-size: 12px; }
+.buy { justify-self: start; font: 600 13px/1 var(--f-body); color: var(--bg); background: var(--accent); padding: 6px 12px; border-radius: 6px; text-decoration: none; white-space: nowrap; }
+.nrow .buy { grid-column: 2; margin-top: 6px; }
 .fbox { margin-top: 14px; border-bottom: 1px solid var(--line); }
 .fbox > summary { cursor: pointer; padding: 10px 0; color: var(--accent); font-weight: 600; font-size: 15px; list-style: none; }
 .fbox > summary::-webkit-details-marker { display: none }
@@ -201,6 +203,18 @@ function lv(leg, kind) {
   const x = !!u.c || !!(r && r[2]);
   const v = r ? (kind === 1 ? (r[0] ?? r[1]) : (r[1] ?? r[0])) : null;
   return { d: v == null ? null : v - st[kind], x };
+}
+// Link do Bilkomu: bilet w jedną stronę, wyszukiwanie od godziny odjazdu, więc ten pociąg jest pierwszy na liście
+function buyUrl(o) {
+  const from = (DATA.bk || [])[O], to = (DATA.bk || [])[o.st];
+  if (!from || !to) return null;
+  const day = shiftDay(o.L.od.dateStr, Math.floor(o.dep / 1440)), m = ((o.dep % 1440) + 1440) % 1440;
+  const [y, mo, d] = day.split("-");
+  return `https://bilkom.pl/podroz?poczatkowa=${from}&docelowa=${to}&data=${d}${mo}${y}${pad(Math.floor(m / 60))}${pad(m % 60)}&przyjazd=false&directOnly=true&bikeCarriage=false&searched=true`;
+}
+function buyHtml(o) {
+  const u = buyUrl(o);
+  return u ? `<a class="buy" href="${esc(u)}" target="_blank" rel="noopener">Kup tam</a>` : "<span></span>";
 }
 function tag(l) { return l.x ? ` <span class="cancel">odwołany</span>` : l.d >= 2 ? ` <span class="late">+${l.d}</span>` : ""; }
 async function loadLive() {
@@ -301,7 +315,7 @@ function optHtml(o) {
   return `<div class="opt">
     <div class="st">${esc(ST[o.st])}<small>${dur(o.ride)} jazdy w jedną stronę · cała wycieczka ${dur(o.total)}${o.last ? ` · <span class="last">ostatni powrót tego dnia</span>` : ""}${l.risky ? ` · <span class="last">przez opóźnienie powrót może uciec</span>` : ""}</small></div>
     <div class="wait ${waitCls(l.wait)}">czekasz ${l.wait} min</div>
-    <div class="leg"><span class="k">tam</span><span class="t">${hm(o.dep)}${tag(l.od)} → ${hm(o.arr)}${tag(l.oa)}</span><span></span>
+    <div class="leg"><span class="k">tam</span><span class="t">${hm(o.dep)}${tag(l.od)} → ${hm(o.arr)}${tag(l.oa)}</span>${buyHtml(o)}
       <span class="k">powrót</span><span class="t">${hm(o.rdep)}${tag(l.rd)} → ${hm(o.rback)}${tag(l.ra)}</span><span class="chips">${chips(o.ret)}</span></div>
   </div>`;
 }
@@ -316,7 +330,7 @@ function renderNow() {
     const o = r.opts.reduce((a, b) => b.wait < a.wait ? b : a), l = liveOf(o);   // najkrótsze czekanie
     return `<div class="nrow"><div class="nt">${hm(r.dep)}</div>
       <div class="nd">${when}do ${esc(ST[o.st])}${l.od.x ? tag(l.od) : l.od.d >= 2 ? ` <span class="late">odjazd +${l.od.d} min</span>` : ""}${o.last ? ` <span class="last">· ostatni powrót</span>` : ""}</div>
-      <div class="ns">jazda ${dur(o.ride)} · czekasz <b>${l.wait} min</b> · wracasz <b>${hm(o.rback)}</b>${tag(l.ra)} · ${esc(carrier(r.t)[1])}${l.risky ? ` · <span class="last">powrót może uciec</span>` : ""}</div></div>`;
+      <div class="ns">jazda ${dur(o.ride)} · czekasz <b>${l.wait} min</b> · wracasz <b>${hm(o.rback)}</b>${tag(l.ra)} · ${esc(carrier(r.t)[1])}${l.risky ? ` · <span class="last">powrót może uciec</span>` : ""}</div>${buyUrl(o) ? buyHtml(o) : ""}</div>`;
   });
   $("nowList").innerHTML = rows.length ? rows.join("") : `<div class="nempty">Brak przejażdżek dziś ani jutro w tych ustawieniach.</div>`;
   const t = LIVE && LIVE.ts ? new Date(LIVE.ts) : null;

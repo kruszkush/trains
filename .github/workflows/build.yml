@@ -26,7 +26,8 @@ jobs:
       - name: Zbuduj stronę z aktualnego rozkładu
         run: |
           mkdir -p site
-          python3 build.py --standalone --out site/index.html --ids-out site/trip_ids.txt
+          python3 station_codes.py station_codes.json || echo "Bez kodów stacji: przyciski Kup będą ukryte"
+          python3 build.py --standalone --out site/index.html --ids-out site/trip_ids.txt --codes station_codes.json --codes-debug site/station_codes.txt
           cp static/sw.js static/manifest.webmanifest static/icon* site/
           touch site/.nojekyll
       - name: Opublikuj na GitHub Pages
