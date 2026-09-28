@@ -194,8 +194,8 @@ def main():
             best = None
             for c in codes:
                 d = hypot((c["lat"] - lat) * 111.2, (c["lon"] - lon) * 111.2 * cos(radians(lat)))
-                if d > 1.5:
-                    continue
+                if d > 1.5 or (d > 0.3 and c["n"].casefold() != name):
+                    continue   # inna nazwa tylko tuż obok (np. „Rabka Zdrój” / „Rabka-Zdrój”)
                 score = (c["n"].casefold() != name, d)   # najpierw zgodna nazwa, potem odległość
                 if best is None or score < best[0]:
                     best = (score, c)
