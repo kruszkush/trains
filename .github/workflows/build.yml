@@ -2,7 +2,7 @@ name: Odśwież rozkład
 
 on:
   schedule:
-    - cron: "17 2 * * *"   # codziennie ok. 4:17 czasu polskiego
+    - cron: "17 2,10,18 * * *"   # 3 razy dziennie: GitHub potrafi pominąć pojedyncze uruchomienie
   push:
     branches: [main]
   workflow_dispatch:
