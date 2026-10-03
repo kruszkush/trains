@@ -1,0 +1,169 @@
+Aleksandrów Kujawski	5100339	Aleksandrów Kujawski wd 0.03 km
+Andrychów	5100340	Andrychów wd 0.01 km
+Bańska Niżna	-	
+Biały Dunajec	5100404	Biały Dunajec wd 0.05 km
+Bielsko-Biała Główna	5100316	Bielsko-Biała Główna wd 0.04 km
+Brzeg	5100003	Brzeg wd 0.01 km
+Byczyna Kluczborska	5100643	Byczyna Kluczborska wd 0.05 km
+Bydgoszcz Główna	5100005	Bydgoszcz Główna wd 0.02 km
+Bydgoszcz Leśna	5100647	Bydgoszcz Leśna wd 0.04 km
+Bydgoszcz Wschód	5100648	Bydgoszcz Wschód wd 0.13 km
+Bystra Podhalańska	5100658	Bystra Podhalańska wd 0.03 km
+Bytom	5100006	Bytom wd 0.05 km
+Chabówka	5100091	Chabówka wd 0.11 km
+Chabówka Stadion	-	
+Chorzów Miasto	5100073	Chorzów Miasto wd 0.10 km
+Choszczno	5100094	Choszczno wd 0.06 km
+Ciechanów	5100095	Ciechanów wd 0.04 km
+Czechowice-Dziedzice	5100251	Czechowice-Dziedzice wd 0.13 km
+Częstochowa	5100007	Częstochowa wd 0.12 km
+Dobiegniew	5100966	Dobiegniew wd 0.09 km
+Działdowo	5100100	Działdowo wd 0.13 km
+Dąbrowa Górnicza Ząbkowice	5100098	Dąbrowa Górnicza Ząbkowice wd 0.08 km
+Dąbrówka Jezioro Mucharskie	-	
+Gdańsk Główny	5100009	Gdańsk Główny wd 0.11 km
+Gdańsk Oliwa	5101104	Gdańsk Oliwa wd 0.05 km
+Gdańsk Wrzeszcz	5101307	Gdańsk Wrzeszcz wd 0.01 km
+Gdynia Główna	5100010	Gdynia Główna wd 0.05 km
+Gogolin	5101140	Gogolin wd 0.03 km
+Goleniów	5100105	Goleniów wd 0.04 km
+Hucisko	-	
+Iława Główna	5101358	Iława Główna wd 0.02 km
+Jarocin	5100016	Jarocin (stacja kolejowa) wd 0.00 km
+Jaworzno Szczakowa	5100213	Jaworzno Szczakowa wd 0.01 km
+Jeleśnia	5101435	Jeleśnia (stacja kolejowa) wd 0.06 km
+Jordanów	5100116	Jordanów wd 0.08 km
+Juszczyn	5101481	Juszczyn wd 0.01 km
+Kalwaria Zebrzydowska Lanckorona	5100118	Kalwaria Zebrzydowska Lanckorona wd 0.01 km
+Katowice	5100020	Katowice wd 0.08 km
+Kluczbork	5100236	Kluczbork wd 0.05 km
+Kojszówka	5101724	Kojszówka wd 0.01 km
+Koluszki	5100024	Koluszki wd 0.07 km
+Konin	5100026	Konin wd 0.06 km
+Koło	5100258	Koło wd 0.13 km
+Kościan	5100124	Kościan wd 0.00 km
+Kraków Bonarka	5101528	Kraków Bonarka wd 0.09 km
+Kraków Grzegórzki	-	
+Kraków Główny	5100028	Kraków Główny wd 0.34 km
+Kraków Opatkowice	-	
+Kraków Podgórze	5101638	Kraków Krzemionki wd 0.18 km
+Kraków Sanktuarium	-	
+Kraków Sidzina	5101773	Kraków Sidzina wd 0.03 km
+Kraków Swoszowice	5101642	Kraków Swoszowice wd 0.04 km
+Kraków Zabłocie	5101645	Kraków Zabłocie wd 0.10 km
+Kraków Łagiewniki	5101531	Kraków Łagiewniki wd 0.11 km
+Krzeszowice	5101863	Krzeszowice wd 0.12 km
+Krzyż	5100030	Krzyż wd 0.28 km
+Kurów Suski	5101796	Kurów Suski wd 0.05 km
+Kutno	5100032	Kutno wd 0.03 km
+Kuźnia Raciborska	5101843	Kuźnia Raciborska wd 0.03 km
+Kędzierzyn-Koźle	5100119	Kędzierzyn Koźle wd 0.02 km
+Kępno	5100023	Kępno wd 0.00 km
+Kęty	5101588	Kęty wd 0.01 km
+Lachowice	5101920	Lachowice (przystanek kolejowy) wd 0.07 km
+Lachowice Centrum	5101955	Lachowice Centrum wd 0.05 km
+Lasek	5101918	Lasek wd 0.04 km
+Laskowice Pomorskie	5100128	Laskowice Pomorskie wd 0.04 km
+Legionowo	5101981	Legionowo wd 0.05 km
+Leszno	5100036	Leszno wd 0.12 km
+Leńcze	5101987	Leńcze wd 0.12 km
+Lubliniec	5100237	Lubliniec wd 0.04 km
+Maków Podhalański	5102179	Maków Podhalański wd 0.16 km
+Malbork	5100040	Malbork wd 0.28 km
+Miechów	5100218	Miechów wd 0.04 km
+Międzyzdroje	5100252	Międzyzdroje wd 0.07 km
+Myszków	5102341	Myszków wd 0.02 km
+Mysłowice	5100175	Mysłowice wd 0.03 km
+Mława	5100219	Mława wd 0.04 km
+Nowy Dwór Mazowiecki	5102409	Nowy Dwór Mazowiecki wd 0.47 km
+Nowy Targ	5100181	Nowy Targ wd 0.05 km
+Oborniki Śląskie	5100182	Oborniki Śląskie wd 0.03 km
+Olesno Śląskie	5100185	Olesno Śląskie wd 0.07 km
+Opoczno Południe	5104744	Opoczno Południe wd 0.20 km
+Opole Główne	5100046	Opole Główne wd 0.08 km
+Osielec	5102548	Osielec wd 0.13 km
+Ostrzeszów	5100223	Ostrzeszów (stacja kolejowa) wd 0.11 km
+Ostrów Wielkopolski	5100047	Ostrów Wielkopolski (stacja kolejowa) wd 0.06 km
+Ozorków	5102654	Ozorków wd 0.02 km
+Oława	5102560	Oława wd 0.01 km
+Pewel Mała	5102725	Pewel Mała (przystanek kolejowy) wd 0.06 km
+Pewel Wielka	5102732	Pewel Wielka wd 0.05 km
+Pewel Wielka Centrum	-	
+Piotrków Trybunalski	5100190	Piotrków Trybunalski wd 0.04 km
+Pleszew	5100192	Pleszew wd 0.04 km
+Podolany	5102714	Podolany wd 0.06 km
+Poronin	5102891	Poronin wd 0.04 km
+Poronin Misiagi	-	
+Poznań Główny	5100081	Poznań Główny wd 0.01 km
+Prabuty	5100194	Prabuty wd 0.01 km
+Pruszcz Gdański	5102942	Pruszcz Gdański wd 0.07 km
+Przytkowice	5103000	Przytkowice wd 0.02 km
+Pyzówka	5102989	Pyzówka wd 0.09 km
+Raba Wyżna	5103015	Raba Wyżna wd 0.05 km
+Rabka Zaryte	5103016	Rabka Zaryte wd 0.22 km
+Rabka-Zdrój	5103045	Rabka Zdrój wd 0.11 km
+Radomsko	5100088	Radomsko wd 0.04 km
+Radziszów	5103057	Radziszów wd 0.07 km
+Radziszów Centrum	-	
+Rawicz	5100202	Rawicz wd 0.02 km
+Rokiciny Podhalańskie	5103149	Rokiciny Podhalańskie wd 0.03 km
+Rybnik	5100262	Rybnik wd 0.18 km
+Rzozów	5103238	Rzozów wd 0.07 km
+Rzozów Centrum	-	
+Sieniawa	5103518	Sieniawa wd 0.05 km
+Skawa	5103426	Skawa wd 0.06 km
+Skawa Środkowa	5103441	Skawa Środkowa wd 0.05 km
+Skawina	5100130	Skawina wd 0.03 km
+Skawina Jagielnia	-	
+Skierniewice	5100294	Skierniewice wd 0.01 km
+Smętowo	5103477	Smętowo wd 0.11 km
+Solec Kujawski	5103527	Solec Kujawski wd 0.04 km
+Sopot	5100056	Sopot wd 0.01 km
+Stargard	-	
+Stronie	5100136	Stronie wd 0.06 km
+Stryszawa	5103710	Stryszawa wd 0.08 km
+Stryszów	-	
+Sucha Beskidzka	5100140	Sucha Beskidzka wd 0.06 km
+Sucha Beskidzka Zamek	5104704	Sucha Beskidzka Zamek wd 0.08 km
+Swarzędz	5103688	Swarzędz wd 0.01 km
+Szaflary	5103737	Szaflary wd 0.11 km
+Szaflary Centrum	5103369	Szaflary Centrum wd 0.04 km
+Szamotuły	5100143	Szamotuły wd 0.11 km
+Szczecin Dąbie	5100144	Szczecin Dąbie wd 0.06 km
+Szczecin Główny	5100057	Szczecin Główny wd 0.01 km
+Słupca	5103469	Słupca wd 0.09 km
+Tarnowskie Góry	5100074	Tarnowskie Góry wd 0.07 km
+Tczew	5100061	Tczew wd 0.05 km
+Tomaszów Mazowiecki	5100331	Tomaszów Mazowiecki wd 0.12 km
+Toruń Główny	5100062	Toruń Główny wd 0.08 km
+Trzebinia	5100072	Trzebinia wd 0.05 km
+Wadowice	5103924	Wadowice wd 0.06 km
+Warszawa Centralna	5100065	Warszawa Centralna wd 0.03 km
+Warszawa Wschodnia	5100066	Warszawa Wschodnia wd 0.08 km
+Warszawa Zachodnia	5100067	Warszawa Zachodnia wd 0.02 km
+Wola Radziszowska	5104068	Wola Radziszowska wd 0.11 km
+Wola Radziszowska Lipki	-	
+Wrocław Główny	5100069	Wrocław Główny wd 0.12 km
+Wrocław Mikołajów	5104134	Wrocław Mikołajów wd 0.09 km
+Wronki	5104135	Wronki wd 0.02 km
+Września	5100157	Września wd 0.07 km
+Wysoka Kamieńska	5100221	Wysoka Kamieńska wd 0.04 km
+Włocławek	5100315	Włocławek wd 0.03 km
+Włoszczowa Północ	5104660	Włoszczowa Północ wd 0.41 km
+Zakopane	5100158	Zakopane wd 0.04 km
+Zawiercie	5100212	Zawiercie wd 0.03 km
+Zdzieszowice	5104277	Zdzieszowice wd 0.10 km
+Zembrzyce	5104295	Zembrzyce wd 0.19 km
+Zgierz	5104308	Zgierz wd 0.01 km
+Łódź Chojny	5100038	Łódź Chojny wd 0.01 km
+Łódź Kaliska	5100039	Łódź Kaliska wd 0.02 km
+Łódź Widzew	5101974	Łódź Widzew wd 0.09 km
+Łódź Żabieniec	5102173	Łódź Żabieniec wd 0.01 km
+Łęczyca	5101964	Łęczyca wd 0.05 km
+Środa Wielkopolska	5103572	Środa Wielkopolska wd 0.03 km
+Świnoujście	5100059	Świnoujście wd 0.01 km
+Żmigród	5104359	Żmigród wd 0.02 km
+Żory	-	
+Żyrardów	-	
+Żywiec	5104418	Żywiec wd 0.07 km
+Żywiec Sporysz	5104416	Żywiec Sporysz (stacja kolejowa) wd 0.05 km
